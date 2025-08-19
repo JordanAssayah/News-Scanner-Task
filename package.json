@@ -1,0 +1,19 @@
+{
+  "name": "darrow-news-violation-scanner",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm start",
+    "install:all": "npm install && concurrently \"npm run install:server\" \"npm run install:client\"",
+    "install:server": "cd server && npm install",
+    "install:client": "cd client && npm install",
+    "clean:all": "concurrently \"npm run clean:server\" \"npm run clean:client\" && npm run clean",
+    "clean:server": "cd server && npm run clean",
+    "clean:client": "cd client && npm run clean",
+    "clean": "rm -rf node_modules && rm -rf package-lock.json"
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  }
+}
