@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
-import fs from "fs";
-import path from "path";
+import { getNews } from "../services/newsapi.service";
+import categories from "../db/categories.json";
 
 const router = Router();
 
@@ -10,9 +10,6 @@ router.get("/", (req: Request, res: Response) => {
 
 router.get("/categories", async (req: Request, res: Response) => {
   try {
-    const categoriesPath = path.join(__dirname, "../db/categories.json");
-    const categoriesData = fs.readFileSync(categoriesPath, "utf8");
-    const categories = JSON.parse(categoriesData);
     res.json(categories);
   } catch (error) {
     console.error("Error reading categories:", error);
@@ -21,7 +18,27 @@ router.get("/categories", async (req: Request, res: Response) => {
 });
 
 router.get("/news", async (req: Request, res: Response) => {
-  // TODO: Implement the news API
+  try {
+    const { query, category } = req.query;
+
+    // Validate required parameters
+    if (!query || !category) {
+      return res.status(400).json({
+        error: "Bad Request",
+        message: "Both 'query' and 'category' parameters are required",
+      });
+    }
+
+    const results = await getNews(query as string, category as string);
+
+    res.json(results);
+  } catch (error) {
+    console.error("Error searching news:", error);
+    res.status(500).json({
+      error: "Failed to search news",
+      message: error instanceof Error ? error.message : "Unknown error",
+    });
+  }
 });
 
 export default router;
