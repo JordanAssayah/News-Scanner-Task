@@ -49,8 +49,6 @@ IMPORTANT: Respond with ONLY valid JSON. Do not use markdown formatting, code bl
       max_tokens: 500,
     });
 
-    console.log(response);
-
     content = response.choices[0]?.message?.content || "";
     if (!content) {
       throw new Error("No response from OpenAI");
