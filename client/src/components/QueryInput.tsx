@@ -3,7 +3,7 @@ import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
 
 interface QueryInputProps {
-  onChange?: any;
+  onChange?: (value: string) => void;
   value?: string;
 }
 
