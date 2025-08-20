@@ -7,11 +7,14 @@ import { CategorySelect } from "./components/CategorySelect";
 import { QueryInput } from "./components/QueryInput";
 import { NewsDisplay } from "./components/NewsDisplay";
 import { FetchNewsButton } from "./components/FetchNewsButton";
+import { NewsArticle } from "./interfaces/news";
 
 function App() {
   const [query, setQuery] = useState("");
   const [selectedOption, setSelectedOption] = useState<string>("");
   const [categories, setCategories] = useState<string[]>([]);
+  const [news, setNews] = useState<NewsArticle[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -25,6 +28,33 @@ function App() {
 
     fetchCategories();
   }, []);
+
+  const fetchNews = async () => {
+    setLoading(true);
+    try {
+      const res = await httpClient.get(ENDPOINTS.NEWS, {
+        params: { query, category: selectedOption },
+      });
+
+      if (res.data && res.data.articles) {
+        setNews(res.data.articles);
+      } else {
+        setNews([]);
+      }
+    } catch (error) {
+      console.error("Error fetching news:", error);
+      setNews([]);
+      alert("Failed to fetch news. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAISummary = async (article: NewsArticle) => {
+    // TODO: Implement AI summary functionality
+    console.log("AI Summary requested for article:", article.title);
+    alert(`AI Summary feature coming soon!\n\nArticle: ${article.title}`);
+  };
 
   return (
     <div className="app">
@@ -44,11 +74,13 @@ function App() {
           onChange={setSelectedOption}
         />
 
-        <FetchNewsButton
-        // onClick={}
-        />
+        <FetchNewsButton onClick={fetchNews} />
       </div>
-      <NewsDisplay />
+      <NewsDisplay
+        news={news}
+        loading={loading}
+        onAISummary={handleAISummary}
+      />
     </div>
   );
 }
