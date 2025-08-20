@@ -1,10 +1,10 @@
 import OpenAI from "openai";
 import { PORTKEY_GATEWAY_URL, createHeaders } from "portkey-ai";
 
-export function getOpenAIClient(): OpenAI {
+export function getOpenAIClient(): OpenAI { 
   return _createOpenAIClient({
-    apiKey: "", // ADD API KEY HERE
-    openAIKey: "", // ADD OPENAI KEY HERE
+    apiKey: process.env.OPENAI_API_KEY || "", // ADD API KEY HERE
+    openAIKey: process.env.OPENAI_API_KEY || "", // ADD OPENAI KEY HERE
   });
 }
 
