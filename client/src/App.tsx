@@ -50,12 +50,6 @@ function App() {
     }
   };
 
-  const handleAISummary = async (article: NewsArticle) => {
-    // TODO: Implement AI summary functionality
-    console.log("AI Summary requested for article:", article.title);
-    alert(`AI Summary feature coming soon!\n\nArticle: ${article.title}`);
-  };
-
   return (
     <div className="app">
       <header className="header">
@@ -76,11 +70,7 @@ function App() {
 
         <FetchNewsButton onClick={fetchNews} />
       </div>
-      <NewsDisplay
-        news={news}
-        loading={loading}
-        onAISummary={handleAISummary}
-      />
+      <NewsDisplay news={news} loading={loading} />
     </div>
   );
 }

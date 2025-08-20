@@ -6,14 +6,9 @@ import { NewsArticle } from "../interfaces/news";
 interface NewsDisplayProps {
   news: NewsArticle[];
   loading: boolean;
-  onAISummary: (article: NewsArticle) => void;
 }
 
-export const NewsDisplay: React.FC<NewsDisplayProps> = ({
-  news,
-  loading,
-  onAISummary,
-}) => {
+export const NewsDisplay: React.FC<NewsDisplayProps> = ({ news, loading }) => {
   if (loading) {
     return (
       <Box
@@ -57,11 +52,7 @@ export const NewsDisplay: React.FC<NewsDisplayProps> = ({
         }}
       >
         {news.map((article, index) => (
-          <NewsCard
-            key={`article-${index}`}
-            article={article}
-            onAISummary={onAISummary}
-          />
+          <NewsCard key={`article-${index}`} article={article} />
         ))}
       </Box>
     </Container>

@@ -11,3 +11,8 @@ export interface NewsArticle {
   publishedAt: string;
   content: string | null;
 }
+
+export interface AISummaryResponse {
+  summary: string;
+  violation: string;
+}

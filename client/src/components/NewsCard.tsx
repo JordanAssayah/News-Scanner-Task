@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardMedia,
@@ -7,17 +7,45 @@ import {
   Button,
   Box,
   Chip,
+  CircularProgress,
+  Alert,
+  Divider,
 } from "@mui/material";
-import { NewsArticle } from "../interfaces/news";
+import { NewsArticle, AISummaryResponse } from "../interfaces/news";
+import httpClient, { ENDPOINTS } from "../services/http-client";
 
 interface NewsCardProps {
   article: NewsArticle;
-  onAISummary: (article: NewsArticle) => void;
 }
 
-export const NewsCard: React.FC<NewsCardProps> = ({ article, onAISummary }) => {
-  const handleAISummaryClick = () => {
-    onAISummary(article);
+export const NewsCard: React.FC<NewsCardProps> = ({ article }) => {
+  const [aiSummary, setAiSummary] = useState<AISummaryResponse | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleAISummaryClick = async () => {
+    if (!article.description) {
+      setError("No description available for AI summary");
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await httpClient.post<AISummaryResponse>(
+        ENDPOINTS.AI_SUMMARY,
+        {
+          description: article.description,
+        }
+      );
+      setAiSummary(response.data);
+    } catch (err) {
+      console.error("Error generating AI summary:", err);
+      setError("Failed to generate AI summary. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Fallback image if no image is provided
@@ -107,6 +135,64 @@ export const NewsCard: React.FC<NewsCardProps> = ({ article, onAISummary }) => {
             sx={{ mb: 2 }}
           />
         )}
+
+        {/* AI Summary Section */}
+        {aiSummary && (
+          <>
+            <Divider sx={{ my: 2 }} />
+
+            {/* Summary Section */}
+            <Box sx={{ mb: 2 }}>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ fontWeight: 600, mb: 0.5 }}
+              >
+                Summary:
+              </Typography>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{
+                  fontSize: "0.9rem",
+                  lineHeight: 1.4,
+                  whiteSpace: "pre-line",
+                }}
+              >
+                {aiSummary.summary}
+              </Typography>
+            </Box>
+
+            {/* Violation Section */}
+            <Box sx={{ mb: 2 }}>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ fontWeight: 600, mb: 0.5 }}
+              >
+                Violation:
+              </Typography>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{
+                  fontSize: "0.9rem",
+                  lineHeight: 1.4,
+                  fontStyle: "italic",
+                }}
+              >
+                {aiSummary.violation}
+              </Typography>
+            </Box>
+          </>
+        )}
+
+        {/* Error Display */}
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
       </CardContent>
 
       <Box sx={{ p: 2, pt: 0 }}>
@@ -114,6 +200,7 @@ export const NewsCard: React.FC<NewsCardProps> = ({ article, onAISummary }) => {
           variant="contained"
           fullWidth
           onClick={handleAISummaryClick}
+          disabled={isLoading || !article.description}
           sx={{
             backgroundColor: "#7c3aed",
             color: "white",
@@ -124,9 +211,20 @@ export const NewsCard: React.FC<NewsCardProps> = ({ article, onAISummary }) => {
             "&:hover": {
               backgroundColor: "#6d28d9",
             },
+            "&:disabled": {
+              backgroundColor: "#9ca3af",
+              color: "#6b7280",
+            },
           }}
         >
-          AI SUMMARY
+          {isLoading ? (
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <CircularProgress size={20} color="inherit" />
+              GENERATING...
+            </Box>
+          ) : (
+            "AI SUMMARY"
+          )}
         </Button>
       </Box>
     </Card>
