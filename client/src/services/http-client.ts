@@ -6,6 +6,7 @@ const instance = axios.create({
 
 export const ENDPOINTS = {
   CATEGORIES: "/categories",
+  NEWS: "/news",
 };
 
 export default instance;
