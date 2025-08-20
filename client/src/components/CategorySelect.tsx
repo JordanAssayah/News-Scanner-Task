@@ -24,13 +24,13 @@ interface Option {
 interface SelectProps {
   options?: Option[];
   onChange?: any;
-  selectedOptions?: string;
+  selectedOption?: string;
 }
 
 export const CategorySelect = ({
   options = [],
   onChange,
-  selectedOptions = "",
+  selectedOption = "",
 }: SelectProps) => {
   const handleChange = (event: SelectChangeEvent<string>) => {
     const {
@@ -55,7 +55,7 @@ export const CategorySelect = ({
         <Select
           labelId="category-label"
          
-          value={selectedOptions}
+          value={selectedOption}
           onChange={handleChange}
           input={<OutlinedInput label="Category" />}
           MenuProps={MenuProps}
