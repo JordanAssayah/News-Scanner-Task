@@ -18,6 +18,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.18.2",
+    "newsapi": "^2.4.1",
     "openai": "^5.12.2",
     "portkey-ai": "^1.10.1"
   }
