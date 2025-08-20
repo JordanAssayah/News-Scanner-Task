@@ -15,6 +15,7 @@ export const FetchNewsButton: React.FC<FetchNewsButtonProps> = ({
         className="submitNewsButton"
         sx={{
           backgroundColor: "#7F56D9",
+          width: { xs: "100%", sm: "auto" },
         }}
       >
         Fetch News

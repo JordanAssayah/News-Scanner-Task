@@ -14,7 +14,12 @@ export const QueryInput = ({ onChange, value = "" }: QueryInputProps) => {
 
   return (
     <div className={"query-input"}>
-      <FormControl sx={{ m: 1, width: 300 }}>
+      <FormControl
+        sx={{
+          m: 1,
+          width: { xs: "100%", sm: 300 },
+        }}
+      >
         <InputLabel
           id="query-input-label"
           sx={{

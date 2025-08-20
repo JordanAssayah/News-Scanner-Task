@@ -41,7 +41,12 @@ export const CategorySelect = ({
 
   return (
     <div className={"select"}>
-      <FormControl sx={{ m: 1, width: 300 }}>
+      <FormControl
+        sx={{
+          m: 1,
+          width: { xs: "100%", sm: 300 },
+        }}
+      >
         <InputLabel
           id="category-label"
           sx={{
@@ -54,7 +59,6 @@ export const CategorySelect = ({
         </InputLabel>
         <Select
           labelId="category-label"
-         
           value={selectedOption}
           onChange={handleChange}
           input={<OutlinedInput label="Category" />}
